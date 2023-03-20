@@ -12,6 +12,10 @@ import javafx.scene.shape.Shape;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.Font;
+
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -65,6 +69,17 @@ public class HelloApplication extends Application {
         //stage.setScene(scene);
         //stage.show();
         // TODO: Create static user interface in ui pane
+        Canvas canvas = new Canvas( 1280, 720 );
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        gc.setFill(Color.RED);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(3);
+        Font theFont = Font.font("Times New Roman", 32 );
+        gc.setFont(theFont);
+        gc.fillText("Game", 60, 50);
+        gc.strokeText("Game", 60, 50);
+
 
         initScene();
         Scene scene = new Scene(sceneRoot);

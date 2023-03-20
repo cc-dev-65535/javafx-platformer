@@ -3,6 +3,7 @@ package com.example.platformer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
@@ -12,9 +13,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class HelloApplication extends Application {
-
+    private HashMap<KeyCode, Boolean> keyPressMap = new HashMap<>();
     private Pane sceneRoot = new Pane();
     private Pane gameRoot = new Pane();
     private Pane userInterfaceRoot = new Pane();
@@ -32,8 +34,8 @@ public class HelloApplication extends Application {
                 }
                 if (Area.LEVEL[i].charAt(j) == '#') {
                     platform = new Rectangle(60, 60);
-                    platform.setTranslateX(j*60);
-                    platform.setTranslateY(i*60);
+                    platform.setTranslateX(j * 60);
+                    platform.setTranslateY(i * 60);
                     ((Rectangle) platform).setFill(Color.BLUE);
 
                     gameRoot.getChildren().add(platform);
@@ -52,6 +54,7 @@ public class HelloApplication extends Application {
     }
 
     private void update() {
+        // TODO: Handle key presses in key map data structure
 
     }
     @Override
@@ -61,9 +64,13 @@ public class HelloApplication extends Application {
         //stage.setTitle("Hello!");
         //stage.setScene(scene);
         //stage.show();
+        // TODO: Create static user interface in ui pane
 
         initScene();
         Scene scene = new Scene(sceneRoot);
+        // TODO: set up handlers for key presses and releases
+        //scene.setOnKeyPressed();
+        //scene.setOnKeyReleased();
         stage.setTitle("Title Here");
         stage.setScene(scene);
         stage.show();

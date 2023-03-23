@@ -26,6 +26,12 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
     <option name="importingSettings">
       <MavenImportingSettings>
         <option name="workspaceImportEnabled" value="true" />
@@ -38,6 +44,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< Updated upstream
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -53,13 +60,31 @@
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.38850576&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Rando/Documents/Course/Term 2/COMP 2522/Week 12/Lab7",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.38850576",
+    "settings.editor.selected.configurable": "vcs.Git",
+    "vue.rearranger.settings.migration": "true"
+>>>>>>> Stashed changes
   }
 }</component>
   <component name="RunManager">
-    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.platformer.HelloApplication" />
+    <configuration name="GameRuntime" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.platformer.GameRuntime" />
       <module name="Platformer" />
-      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\omiya\java\javafx-sdk-19.0.2.1\lib&quot; --add-modules javafx.controls,javafx.fxml" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Program Files\Java\javafx-sdk-19.0.2.1\lib&quot; --add-modules javafx.controls,javafx.fxml" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -73,9 +98,17 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1679045274665</updated>
+<<<<<<< Updated upstream
       <workItem from="1679045275850" duration="1740000" />
       <workItem from="1679294039817" duration="523000" />
       <workItem from="1679294774598" duration="301000" />
+=======
+      <workItem from="1679045275850" duration="1363000" />
+      <workItem from="1679171005432" duration="146000" />
+      <workItem from="1679277625622" duration="124000" />
+      <workItem from="1679329019728" duration="746000" />
+      <workItem from="1679603595746" duration="4838000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>

@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fbd5a40-f1c4-43de-85a5-66e4a7901046" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="5fbd5a40-f1c4-43de-85a5-66e4a7901046" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +14,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="JavaFXApplication" />
       </list>
     </option>
   </component>
@@ -56,10 +55,10 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.platformer.HelloApplication" />
+    <configuration name="GameRuntime" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.platformer.GameRuntime" />
       <module name="Platformer" />
-      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\omiya\java\javafx-sdk-19.0.2.1\lib&quot; --add-modules javafx.controls,javafx.fxml" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Program Files\Java\javafx-sdk-19.0.2.1\lib&quot; --add-modules javafx.controls,javafx.fxml" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -76,8 +75,7 @@
       <workItem from="1679045275850" duration="1740000" />
       <workItem from="1679294039817" duration="523000" />
       <workItem from="1679294774598" duration="301000" />
-      <workItem from="1679653397041" duration="25000" />
-      <workItem from="1679895550462" duration="368000" />
+      <workItem from="1679610505414" duration="276000" />
     </task>
     <servers />
   </component>

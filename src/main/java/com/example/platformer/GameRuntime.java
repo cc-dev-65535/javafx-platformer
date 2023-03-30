@@ -1,15 +1,14 @@
 package com.example.platformer;
 
 import javafx.application.Application;
-import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
-import javafx.scene.Node;
+//import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,16 +16,19 @@ import java.util.ArrayList;
 
 public class GameRuntime extends Application {
 
+    /* root panes for this game's scene graph */
     private Pane sceneRoot = new Pane();
     private Pane gameRoot = new Pane();
     private Pane userInterfaceRoot = new Pane();
 
-    private Node player;
-    private Point2D playerVelocity = new Point2D(0,0);
-    private ArrayList<Node> platforms = new ArrayList<Node>();
+    /* player and platform representations in game */
+    private Sprite playerSprite;
+    private ArrayList<Sprite> platforms = new ArrayList<Sprite>();
 
+    /* dictionary that holds currently pressed keys */
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
 
+    /* various game state variables and constants */
     private int levelWidth;
     private boolean canJump = true;
 
@@ -41,26 +43,31 @@ public class GameRuntime extends Application {
                     continue;
                 }
                 if (Area.LEVEL[i].charAt(j) == '#') {
-                    Node platform = new Rectangle(60, 60);
-                    platform.setTranslateX(j*60);
-                    platform.setTranslateY(i*60);
-                    ((Rectangle) platform).setFill(Color.BLUE);
-
-                    gameRoot.getChildren().add(platform);
-
-                    platforms.add(platform);
+//                    Node platform = new Rectangle(60, 60);
+//                    platform.setTranslateX(j*60);
+//                    platform.setTranslateY(i*60);
+//                    ((Rectangle) platform).setFill(Color.BLUE);
+//
+//                    gameRoot.getChildren().add(platform);
+//
+//                    platforms.add(platform);
+                    Sprite platformSprite = new Sprite(60, 60, new Image("com/example/platformer/tiles/Tiles/14.png"), j, i);
+                    platforms.add(platformSprite);
+                    gameRoot.getChildren().add(platformSprite);
                 }
             }
         }
 
-        player = new Rectangle(60, 60);
-        player.setTranslateX(0);
-        player.setTranslateY(600);
-        ((Rectangle) player).setFill(Color.RED);
+//        player = new Rectangle(60, 60);
+//        player.setTranslateX(0);
+//        player.setTranslateY(600);
+//        ((Rectangle) player).setFill(Color.RED);
+//
+//        gameRoot.getChildren().add(player);
+        playerSprite = new Sprite(60, 60, new Image("com/example/platformer/girl/Idle (1).png"), 0, 10);
+        gameRoot.getChildren().add(playerSprite);
 
-        gameRoot.getChildren().add(player);
-
-        player.translateXProperty().addListener((obs, old, newValue) -> {
+        playerSprite.translateXProperty().addListener((obs, old, newValue) -> {
             int offset = newValue.intValue();
 
             if (offset > 640 && offset < levelWidth - 640) {
@@ -72,42 +79,42 @@ public class GameRuntime extends Application {
     }
 
     private void update() {
-        if (keys.getOrDefault(KeyCode.W, false) && player.getTranslateY() >= 5) {
+        if (keys.getOrDefault(KeyCode.W, false) && playerSprite.getTranslateY() >= 5) {
             jumpPlayer();
         }
-        if (keys.getOrDefault(KeyCode.A, false) && player.getTranslateY() >= 5) {
+        if (keys.getOrDefault(KeyCode.A, false) && playerSprite.getTranslateY() >= 5) {
             movePlayerX(-5);
         }
-        if (keys.getOrDefault(KeyCode.D, false) && player.getTranslateY() >= 5) {
+        if (keys.getOrDefault(KeyCode.D, false) && playerSprite.getTranslateY() >= 5) {
             movePlayerX(5);
         }
-        if (playerVelocity.getY() < 10) {
-            playerVelocity = playerVelocity.add(0,1);
+        if (playerSprite.getPlayerVelocity().getY() < 10) {
+            playerSprite.setPlayerVelocity(playerSprite.getPlayerVelocity().add(0,1));
         }
-        movePlayerY((int)playerVelocity.getY());
+        movePlayerY((int) (playerSprite.getPlayerVelocity().getY()));
     }
 
     private void movePlayerX(int value) {
         boolean movingRight = value > 0;
 
         for (int i = 0; i < Math.abs(value); i++) {
-            for (Node platform : platforms) {
-                if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {
+            for (Sprite platform : platforms) {
+                if (playerSprite.getBoundsInParent().intersects(platform.getBoundsInParent())) {
                     if (movingRight) {
-                        if(player.getTranslateX() + 60 == platform.getTranslateX()) {
-                            player.setTranslateX(player.getTranslateX() - 1);
+                        if (playerSprite.getTranslateX() + 60 == platform.getTranslateX()) {
+                            playerSprite.setTranslateX(playerSprite.getTranslateX() - 1);
                             canJump = true;
                             return;
                         }
                     }
                     else {
-                        if (player.getTranslateX() == platform.getTranslateX() + 80){
+                        if (playerSprite.getTranslateX() == platform.getTranslateX() + 80){
                             return;
                         }
                     }
                 }
             }
-            player.setTranslateX(player.getTranslateX() + (movingRight ? 1 : - 1));
+            playerSprite.setTranslateX(playerSprite.getTranslateX() + (movingRight ? 1 : - 1));
         }
     }
 
@@ -115,29 +122,29 @@ public class GameRuntime extends Application {
         boolean movingDown = value > 0;
 
         for (int i = 0; i < Math.abs(value); i++) {
-            for (Node platform : platforms) {
-                if (player.getBoundsInParent().intersects(platform.getBoundsInParent())) {
+            for (Sprite platform : platforms) {
+                if (playerSprite.getBoundsInParent().intersects(platform.getBoundsInParent())) {
                     if (movingDown) {
-                        if(player.getTranslateY() + 60 == platform.getTranslateY()) {
-                            player.setTranslateY(player.getTranslateY() - 1);
+                        if (playerSprite.getTranslateY() + 60 == platform.getTranslateY()) {
+                            playerSprite.setTranslateY(playerSprite.getTranslateY() - 1);
                             canJump = true;
                             return;
                         }
                     }
                     else {
-                        if (player.getTranslateY() == platform.getTranslateY() + 80){
+                        if (playerSprite.getTranslateY() == platform.getTranslateY() + 80){
                             return;
                         }
                     }
                 }
             }
-            player.setTranslateY(player.getTranslateY() + (movingDown ? 1 : - 1));
+            playerSprite.setTranslateY(playerSprite.getTranslateY() + (movingDown ? 1 : - 1));
         }
     }
 
     private void jumpPlayer() {
         if (canJump) {
-            playerVelocity = playerVelocity.add(0,-30);
+            playerSprite.setPlayerVelocity(playerSprite.getPlayerVelocity().add(0,-30));
             canJump = false;
         }
     }

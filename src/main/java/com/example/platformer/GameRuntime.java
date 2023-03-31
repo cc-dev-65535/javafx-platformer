@@ -1,18 +1,20 @@
 package com.example.platformer;
 
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
-//import javafx.scene.Node;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GameRuntime extends Application {
 
@@ -22,20 +24,29 @@ public class GameRuntime extends Application {
     private Pane userInterfaceRoot = new Pane();
 
     /* player and platform representations in game */
+    private Canvas background;
     private Sprite playerSprite;
     private ArrayList<Sprite> platforms = new ArrayList<Sprite>();
+    private ArrayList<Sprite> coins = new ArrayList<Sprite>();
 
     /* dictionary that holds currently pressed keys */
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
 
     /* various game state variables and constants */
     private int levelWidth;
+    private int levelHeight;
     private boolean canJump = true;
 
     private void initScene() {
-        Rectangle background = new Rectangle(1280, 720);
+        //Canvas background = new Rectangle(1280, 720);
+
+        //Canvas background = setBackground(new Image("com/example/platformer/background/game-bg-fix.png"));
+        background = new Background(new Image("com/example/platformer/background/game-bg-fix.png"));
+
+        sceneRoot.setMaxSize(1280, 720);
 
         levelWidth = Area.LEVEL[0].length() * 60;
+        levelHeight = Area.LEVEL.length * 60;
 
         for (int i = 0; i < Area.LEVEL.length; i++) {
             for (int j = 0; j < Area.LEVEL[i].length(); j++) {
@@ -43,30 +54,34 @@ public class GameRuntime extends Application {
                     continue;
                 }
                 if (Area.LEVEL[i].charAt(j) == '#') {
-//                    Node platform = new Rectangle(60, 60);
-//                    platform.setTranslateX(j*60);
-//                    platform.setTranslateY(i*60);
-//                    ((Rectangle) platform).setFill(Color.BLUE);
-//
-//                    gameRoot.getChildren().add(platform);
-//
-//                    platforms.add(platform);
                     Sprite platformSprite = new Sprite(60, 60, new Image("com/example/platformer/tiles/Tiles/14.png"), j, i);
                     platforms.add(platformSprite);
                     gameRoot.getChildren().add(platformSprite);
                 }
+                if (Area.LEVEL[i].charAt(j) == '1') {
+                    Sprite coinSprite = new Sprite(60,60, new Image("com/example/platformer/ui/coin.png"), j, i);
+                    coinSprite.setImage(new Image("com/example/platformer/ui/coin.png"), 5, 5, 40, 40);
+                    coins.add(coinSprite);
+                    gameRoot.getChildren().add(coinSprite);
+                }
             }
         }
 
-//        player = new Rectangle(60, 60);
-//        player.setTranslateX(0);
-//        player.setTranslateY(600);
-//        ((Rectangle) player).setFill(Color.RED);
-//
-//        gameRoot.getChildren().add(player);
         playerSprite = new Sprite(60, 60, new Image("com/example/platformer/girl/Idle (1).png"), 0, 10);
         gameRoot.getChildren().add(playerSprite);
 
+        initScrollScreen(levelWidth, levelHeight, gameRoot);
+        //gameRoot.setLayoutX(0);
+        gameRoot.setLayoutY(-(levelHeight - 720));
+
+        //UI
+        Image health1 = new Image("com/example/platformer/ui/3d-heart.png");
+        userInterfaceRoot.getChildren().add(new UI(health1));
+
+        sceneRoot.getChildren().addAll(background, gameRoot, userInterfaceRoot);
+    }
+
+    private void initScrollScreen(int levelWidth, int levelHeight, Pane gameRoot) {
         playerSprite.translateXProperty().addListener((obs, old, newValue) -> {
             int offset = newValue.intValue();
 
@@ -75,7 +90,13 @@ public class GameRuntime extends Application {
             }
         });
 
-        sceneRoot.getChildren().addAll(background, gameRoot, userInterfaceRoot);
+        playerSprite.translateYProperty().addListener((obs, old, newValue) -> {
+            int offset = newValue.intValue();
+
+            if (offset > 360 && offset < levelHeight - 360) {
+                gameRoot.setLayoutY(-(offset - 360));
+            }
+        });
     }
 
     private void update() {
@@ -83,15 +104,37 @@ public class GameRuntime extends Application {
             jumpPlayer();
         }
         if (keys.getOrDefault(KeyCode.A, false) && playerSprite.getTranslateY() >= 5) {
+            playerSprite.setImage(new Image("com/example/platformer/girl/Idle (1) - left.png"), 0, 0, 60, 60);
             movePlayerX(-5);
         }
         if (keys.getOrDefault(KeyCode.D, false) && playerSprite.getTranslateY() >= 5) {
+            playerSprite.setImage(new Image("com/example/platformer/girl/Idle (1).png"), 0, 0, 60, 60);
             movePlayerX(5);
         }
         if (playerSprite.getPlayerVelocity().getY() < 10) {
             playerSprite.setPlayerVelocity(playerSprite.getPlayerVelocity().add(0,1));
         }
+
+/*        if (keys.getOrDefault(KeyCode.SPACE, false)) {
+            playerSprite.setImage(new Image("com/example/platformer/boy/Idle (1).png"));
+        }*/
         movePlayerY((int) (playerSprite.getPlayerVelocity().getY()));
+
+/*        for (Sprite coin : coins) {
+            if (playerSprite.getBoundsInParent().intersects(coin.getBoundsInParent())) {
+                coin.setActive(false);
+            }
+        }*/
+
+        Iterator<Sprite> coinIterator = coins.iterator();
+        while (coinIterator.hasNext()) {
+            Sprite nextCoin = coinIterator.next();
+            if (playerSprite.getBoundsInParent().intersects(nextCoin.getBoundsInParent())) {
+                nextCoin.setActive(false);
+                gameRoot.getChildren().remove(nextCoin);
+                coinIterator.remove();
+            }
+        }
     }
 
     private void movePlayerX(int value) {
@@ -151,12 +194,6 @@ public class GameRuntime extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        //FXMLLoader fxmlLoader = new FXMLLoader(GameRuntime.class.getResource("hello-view.fxml"));
-        //Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        //stage.setTitle("Hello!");
-        //stage.setScene(scene);
-        //stage.show();
-
         initScene();
         Scene scene = new Scene(sceneRoot);
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));

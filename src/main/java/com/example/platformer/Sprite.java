@@ -14,15 +14,16 @@ public class Sprite extends Canvas {
     private Point2D playerVelocity;
     private double width;
     private double height;
+    private boolean active;
 
     public Sprite(double width, double height, Image image, int positionX, int positionY) {
         super(60, 60);
         GraphicsContext gc = this.getGraphicsContext2D();
         this.setTranslateX(positionX*60);
         this.setTranslateY(positionY*60);
-        gc.setFill(Color.BLACK);
         gc.drawImage(image, 0, 0, 60, 60);
         playerVelocity = new Point2D(0,0);
+        active = true;
     }
 
     public Point2D getPlayerVelocity() {
@@ -33,6 +34,17 @@ public class Sprite extends Canvas {
         this.playerVelocity = playerVelocity;
     }
 
+    public void setImage(Image image, int offsetX, int offsetY, int width, int height) {
+        GraphicsContext gc = this.getGraphicsContext2D();
+        gc.clearRect(0,0, this.getWidth(), this.getHeight());
+        this.setTranslateX(this.getTranslateX());
+        this.setTranslateY(this.getTranslateY());
+        gc.drawImage(image, offsetX, offsetY, width, height);
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
     //    public void update(double time) {
 //        positionX += velocityX * time;
 //        positionY += velocityY * time;

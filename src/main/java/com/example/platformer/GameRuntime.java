@@ -28,6 +28,7 @@ public class GameRuntime extends Application {
     private Sprite playerSprite;
     private ArrayList<Sprite> platforms = new ArrayList<Sprite>();
     private ArrayList<Sprite> coins = new ArrayList<Sprite>();
+    private ArrayList<Sprite> uiHealth = new ArrayList<>();
 
     /* dictionary that holds currently pressed keys */
     private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
@@ -35,7 +36,10 @@ public class GameRuntime extends Application {
     /* various game state variables and constants */
     private int levelWidth;
     private int levelHeight;
+    private int healthValue = 3;
     private boolean canJump = true;
+    private boolean running = true;
+    private UI currentUI;
 
     private void initScene() {
         //Canvas background = new Rectangle(1280, 720);
@@ -44,6 +48,7 @@ public class GameRuntime extends Application {
         background = new Background(new Image("com/example/platformer/background/game-bg-fix.png"));
 
         sceneRoot.setMaxSize(1280, 720);
+        //userInterfaceRoot.setMaxSize(1280, 720);
 
         levelWidth = Area.LEVEL[0].length() * 60;
         levelHeight = Area.LEVEL.length * 60;
@@ -75,8 +80,10 @@ public class GameRuntime extends Application {
         gameRoot.setLayoutY(-(levelHeight - 720));
 
         //UI
-        Image health1 = new Image("com/example/platformer/ui/3d-heart.png");
-        userInterfaceRoot.getChildren().add(new UI(health1));
+        //Sprite health1 = new Sprite(50, 50, new Image("com/example/platformer/ui/3d-heart.png"), 20, 20);
+        Image health = new Image("com/example/platformer/ui/3d-heart.png");
+        currentUI = new UI(health, healthValue);
+        userInterfaceRoot.getChildren().add(currentUI);
 
         sceneRoot.getChildren().addAll(background, gameRoot, userInterfaceRoot);
     }
@@ -115,6 +122,27 @@ public class GameRuntime extends Application {
             playerSprite.setPlayerVelocity(playerSprite.getPlayerVelocity().add(0,1));
         }
 
+        if (playerSprite.getTranslateY() > levelHeight) {
+            if (running) {
+                // make new ui with health subtracted
+                healthValue--;
+                userInterfaceRoot.getChildren().remove(currentUI);
+                Image health = new Image("com/example/platformer/ui/3d-heart.png");
+                currentUI = new UI(health, healthValue);
+                userInterfaceRoot.getChildren().add(currentUI);
+                running = false;
+            } else {
+                //make new character spawned
+                gameRoot.getChildren().remove(playerSprite);
+                playerSprite = new Sprite(60, 60, new Image("com/example/platformer/girl/Idle (1).png"), 0, 10);
+                gameRoot.getChildren().add(playerSprite);
+                initScrollScreen(levelWidth, levelHeight, gameRoot);
+                gameRoot.setLayoutY(-(levelHeight - 720));
+                gameRoot.setLayoutX(0);
+                running = true;
+            }
+        }
+
 /*        if (keys.getOrDefault(KeyCode.SPACE, false)) {
             playerSprite.setImage(new Image("com/example/platformer/boy/Idle (1).png"));
         }*/
@@ -145,8 +173,6 @@ public class GameRuntime extends Application {
                 if (playerSprite.getBoundsInParent().intersects(platform.getBoundsInParent())) {
                     if (movingRight) {
                         if (playerSprite.getTranslateX() + 60 == platform.getTranslateX()) {
-                            playerSprite.setTranslateX(playerSprite.getTranslateX() - 1);
-                            canJump = true;
                             return;
                         }
                     }
@@ -198,7 +224,7 @@ public class GameRuntime extends Application {
         Scene scene = new Scene(sceneRoot);
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));
         scene.setOnKeyReleased(event -> keys.put(event.getCode(), false));
-        stage.setTitle("Title Here");
+        stage.setTitle("Adventures In Wonderland");
         stage.setScene(scene);
         stage.show();
 

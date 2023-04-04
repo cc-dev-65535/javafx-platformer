@@ -31,9 +31,14 @@ public class UI extends Canvas {
         }
         gc.setFill(Color.rgb(255, 204, 0));
         gc.setFont(new Font("Impact", 50));
-        gc.fillText("Coins Left", 1000, 60);
+        gc.fillText("Coins Left: ", 1000, 60);
     }
 
+/*    public UI(int coinsLeft) {
+        this.getGraphicsContext2D().setFill(Color.rgb(255, 204, 0));
+        this.getGraphicsContext2D().setFont(new Font("Impact", 50));
+        this.getGraphicsContext2D().fillText("Coins Left " + coinsLeft, 1000, 60);
+    }*/
 
 
 }

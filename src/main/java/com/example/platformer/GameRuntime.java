@@ -37,6 +37,7 @@ public class GameRuntime extends Application {
     private int levelWidth;
     private int levelHeight;
     private int healthValue = 3;
+    private int coinsLeft;
     private boolean canJump = true;
     private boolean running = true;
     private UI currentUI;
@@ -68,6 +69,7 @@ public class GameRuntime extends Application {
                     coinSprite.setImage(new Image("com/example/platformer/ui/coin.png"), 5, 5, 40, 40);
                     coins.add(coinSprite);
                     gameRoot.getChildren().add(coinSprite);
+                    coinsLeft++;
                 }
             }
         }

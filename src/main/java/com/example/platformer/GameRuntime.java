@@ -40,6 +40,8 @@ public class GameRuntime extends Application {
     private int coinsLeft;
     private boolean canJump = true;
     private boolean running = true;
+    private boolean isAlive = true;
+    private boolean endScreen = false;
     private UI currentUI;
 
     private void initScene() {
@@ -84,7 +86,7 @@ public class GameRuntime extends Application {
         //UI
         //Sprite health1 = new Sprite(50, 50, new Image("com/example/platformer/ui/3d-heart.png"), 20, 20);
         Image health = new Image("com/example/platformer/ui/3d-heart.png");
-        currentUI = new UI(health, healthValue);
+        currentUI = new UI(health, healthValue, coinsLeft);
         userInterfaceRoot.getChildren().add(currentUI);
 
         sceneRoot.getChildren().addAll(background, gameRoot, userInterfaceRoot);
@@ -126,11 +128,15 @@ public class GameRuntime extends Application {
 
         if (playerSprite.getTranslateY() > levelHeight) {
             if (running) {
+                if (healthValue <= 1) {
+                    isAlive = false;
+                    endScreen = true;
+                }
                 // make new ui with health subtracted
                 healthValue--;
                 userInterfaceRoot.getChildren().remove(currentUI);
                 Image health = new Image("com/example/platformer/ui/3d-heart.png");
-                currentUI = new UI(health, healthValue);
+                currentUI = new UI(health, healthValue, coinsLeft);
                 userInterfaceRoot.getChildren().add(currentUI);
                 running = false;
             } else {
@@ -163,6 +169,18 @@ public class GameRuntime extends Application {
                 nextCoin.setActive(false);
                 gameRoot.getChildren().remove(nextCoin);
                 coinIterator.remove();
+
+                coinsLeft--;
+
+                userInterfaceRoot.getChildren().remove(currentUI);
+                Image health = new Image("com/example/platformer/ui/3d-heart.png");
+                currentUI = new UI(health, healthValue, coinsLeft);
+                userInterfaceRoot.getChildren().add(currentUI);
+
+                if (coinsLeft <= 0) {
+                    isAlive = false;
+                    endScreen = true;
+                }
             }
         }
     }
@@ -220,6 +238,23 @@ public class GameRuntime extends Application {
         }
     }
 
+    private void showEndScreen() {
+        Image endScreen;
+        if (healthValue <= 1) {
+            //userInterfaceRoot.getChildren().remove(currentUI);
+            endScreen = new Image("com/example/platformer/ui/game-over-text.png");
+            //currentUI = new UI(endScreen);
+            //userInterfaceRoot.getChildren().add(currentUI);
+        } else {
+            endScreen = new Image("com/example/platformer/ui/win-text.png");
+        }
+
+        userInterfaceRoot.getChildren().remove(currentUI);
+        currentUI = new UI(endScreen);
+        userInterfaceRoot.getChildren().add(currentUI);
+        //victory
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         initScene();
@@ -232,7 +267,14 @@ public class GameRuntime extends Application {
 
         new AnimationTimer() {
             public void handle(long currentNanoTime) {
-                update();
+                if (isAlive) {
+                    update();
+                }
+                if (endScreen) {
+                    endScreen = false;
+                    keys.keySet().forEach(key -> keys.put(key, false));
+                    showEndScreen();
+                }
             }
         }.start();
     }

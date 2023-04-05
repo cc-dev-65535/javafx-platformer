@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class UI extends Canvas {
 
-    public UI(Image healthImage, int pos) {
+    public UI(Image healthImage, int pos, int coinsLeft) {
         super(1280,720);
         GraphicsContext gc = this.getGraphicsContext2D();
         switch (pos) {
@@ -31,7 +31,13 @@ public class UI extends Canvas {
         }
         gc.setFill(Color.rgb(255, 204, 0));
         gc.setFont(new Font("Impact", 50));
-        gc.fillText("Coins Left: ", 1000, 60);
+        gc.fillText("Coins Left: " + coinsLeft, 1000, 60);
+    }
+
+    public UI(Image screenType) {
+        super(1280,720);
+        GraphicsContext gc = this.getGraphicsContext2D();
+        gc.drawImage(screenType,300,260, 705,110);
     }
 
 /*    public UI(int coinsLeft) {
@@ -39,6 +45,5 @@ public class UI extends Canvas {
         this.getGraphicsContext2D().setFont(new Font("Impact", 50));
         this.getGraphicsContext2D().fillText("Coins Left " + coinsLeft, 1000, 60);
     }*/
-
 
 }

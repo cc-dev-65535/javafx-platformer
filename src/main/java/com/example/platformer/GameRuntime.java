@@ -8,7 +8,9 @@ import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
-import java.io.IOException;
+
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -124,9 +126,13 @@ public class GameRuntime extends Application {
     private boolean endScreen = false;
     private boolean gameReset = false;
     private UI currentUI;
+    private Instant gameTimerStart;
 
     /* Initialize the game scene */
     private void initScene() {
+        // Start timer
+        gameTimerStart = Instant.now();
+
         /* Player and Platform representations in game */
         Canvas background = new Background(new Image("com/example/platformer/background/game-bg-fix.png"));
         sceneRoot.setMaxSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -239,14 +245,6 @@ public class GameRuntime extends Application {
                 userInterfaceRoot.getChildren().add(currentUI);
                 running = false;
             } else {
-//                // Make new character spawned
-//                gameRoot.getChildren().remove(playerSprite);
-//                playerSprite = new Sprite(PLAYER_SPRITE_SIZE, PLAYER_SPRITE_SIZE, new Image("com/example/platformer/girl/Idle (1).png"), 0, PLAYER_SPRITE_Y_OFFSET);
-//                gameRoot.getChildren().add(playerSprite);
-//                initScrollScreen(levelWidth, levelHeight, gameRoot);
-//                gameRoot.setLayoutY(-(levelHeight - SCREEN_HEIGHT));
-//                gameRoot.setLayoutX(0);
-//                running = true;
                 spawnNewCharacter();
                 running = true;
             }
@@ -265,7 +263,6 @@ public class GameRuntime extends Application {
 
                 coinsLeft--;
 
-                System.out.println(coinsLeft);
                 // Update the UI to reflect coins collected
                 userInterfaceRoot.getChildren().remove(currentUI);
                 Image health = new Image("com/example/platformer/ui/3d-heart.png");
@@ -381,6 +378,7 @@ public class GameRuntime extends Application {
             currentUI = new UI(health, healthValue, coinsLeft);
             userInterfaceRoot.getChildren().add(currentUI);
 
+            gameTimerStart = Instant.now();
             running = true;
             isAlive = true;
             endScreen = false;
@@ -397,14 +395,18 @@ public class GameRuntime extends Application {
             endScreen = new Image("com/example/platformer/ui/win-text.png");
         }
 
+        // End game timer and calculate time elapsed
+        Instant gameTimerFinish = Instant.now();
+        long timeElapsed = Duration.between(gameTimerStart, gameTimerFinish).toSeconds();
+
         userInterfaceRoot.getChildren().remove(currentUI);
-        currentUI = new UI(endScreen);
+        currentUI = new UI(endScreen, timeElapsed);
         userInterfaceRoot.getChildren().add(currentUI);
     }
 
     /* Set up the program, initialize the main gameplay loop  */
     @Override
-    public void start(final Stage stage) throws IOException {
+    public void start(final Stage stage) {
         initScene();
         Scene scene = new Scene(sceneRoot);
         scene.setOnKeyPressed(event -> keys.put(event.getCode(), true));

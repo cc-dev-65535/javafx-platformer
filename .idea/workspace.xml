@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fbd5a40-f1c4-43de-85a5-66e4a7901046" name="Changes" comment="" />
+    <list default="true" id="5fbd5a40-f1c4-43de-85a5-66e4a7901046" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/platformer/GameRuntime.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/platformer/GameRuntime.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/platformer/Sprite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/platformer/Sprite.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,8 +17,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="JavaFXApplication" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -76,6 +80,7 @@
       <workItem from="1679294039817" duration="523000" />
       <workItem from="1679294774598" duration="301000" />
       <workItem from="1679610505414" duration="276000" />
+      <workItem from="1680126675035" duration="10010000" />
     </task>
     <servers />
   </component>

@@ -1,52 +1,99 @@
 package com.example.platformer;
 
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * This class describes a Game Sprite.
+ *
+ * @author Collin Chan, Ediljohn Joson
+ * @version 2023-04-05
+ */
 public class Sprite extends Canvas {
-    private Image image;
-    //private double positionX;
-    //private double positionY;
-    private Point2D playerVelocity;
-    private double width;
-    private double height;
 
-    public Sprite(double width, double height, Image image, int positionX, int positionY) {
-        super(60, 60);
+    /**
+     * The width of the sprite.
+     */
+    public static final int SPRITE_WIDTH = 60;
+
+    /**
+     * The height of the sprite.
+     */
+    public static final int SPRITE_HEIGHT = 60;
+
+    /**
+     * The X offset of the sprite image.
+     */
+    public static final int SPRITE_OFFSET_X = 0;
+
+    /**
+     * The Y offset of the sprite image.
+     */
+    public static final int SPRITE_OFFSET_Y = 0;
+
+
+    private Image image;
+    private Point2D playerVelocity;
+    private boolean active;
+
+    /**
+     * Constructs a sprite.
+     * @param width the width to set
+     * @param height the height to set
+     * @param image the image to set
+     * @param positionX the X coordinate
+     * @param positionY the Y coordinate
+     */
+    public Sprite(final double width, final double height, final Image image, final int positionX, final int positionY) {
+        super(SPRITE_WIDTH, SPRITE_HEIGHT);
         GraphicsContext gc = this.getGraphicsContext2D();
-        this.setTranslateX(positionX*60);
-        this.setTranslateY(positionY*60);
-        gc.setFill(Color.BLACK);
-        gc.drawImage(image, 0, 0, 60, 60);
-        playerVelocity = new Point2D(0,0);
+        this.setTranslateX(positionX * SPRITE_WIDTH);
+        this.setTranslateY(positionY * SPRITE_HEIGHT);
+        gc.drawImage(image, SPRITE_OFFSET_X, SPRITE_OFFSET_Y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        playerVelocity = new Point2D(0, 0);
+        active = true;
     }
 
+    /**
+     * Get the player velocity.
+     * @return the player velocity
+     */
     public Point2D getPlayerVelocity() {
         return playerVelocity;
     }
 
-    public void setPlayerVelocity(Point2D playerVelocity) {
+    /**
+     * Set the player velocity.
+     * @param playerVelocity the new player velocity
+     */
+    public void setPlayerVelocity(final Point2D playerVelocity) {
         this.playerVelocity = playerVelocity;
     }
 
-    //    public void update(double time) {
-//        positionX += velocityX * time;
-//        positionY += velocityY * time;
-//    }
+    /**
+     * Set a new sprite image specified parameters.
+     * @param image the image to set
+     * @param offsetX the x-coordinate
+     * @param offsetY the y-coordinate
+     * @param width the image width
+     * @param height the image height
+     */
+    public void setImage(final Image image, final int offsetX, final int offsetY, final int width, final int height) {
+        GraphicsContext gc = this.getGraphicsContext2D();
+        gc.clearRect(0, 0, this.getWidth(), this.getHeight());
+        this.setTranslateX(this.getTranslateX());
+        this.setTranslateY(this.getTranslateY());
+        gc.drawImage(image, offsetX, offsetY, width, height);
+    }
 
-//    public void render(GraphicsContext gc) {
-//        gc.drawImage( image, positionX, positionY );
-//    }
-//
-//    public Rectangle2D getBoundary() {
-//        return new Rectangle2D(positionX,positionY,width,height);
-//    }
-//
-//    public boolean intersects(Sprite s) {
-//        return s.getBoundary().intersects( this.getBoundary() );
-//    }
+    /**
+     * Set active variable.
+     * @param active the active boolean to change
+     */
+    public void setActive(final boolean active) {
+        this.active = active;
+    }
+
 }

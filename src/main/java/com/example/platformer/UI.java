@@ -121,9 +121,9 @@ public class UI extends Canvas {
         super(WINDOW_WIDTH, WINDOW_HEIGHT);
         GraphicsContext gc = this.getGraphicsContext2D();
         gc.drawImage(screenType, SCREEN_TYPE_X_POS, SCREEN_TYPE_Y_POS, SCREEN_TYPE_WIDTH, SCREEN_TYPE_HEIGHT);
-        gc.setFill(Color.rgb(211, 27, 98));
+        gc.setFill(Color.rgb(199, 9, 83));
         gc.setFont(new Font("Impact", COINS_LEFT_FONT_SIZE));
         gc.fillText("Press 'R' to try again!", 430, 485);
-        gc.fillText("Time: " + timeElapsed + " Seconds", 430, 425);
+        gc.fillText("Time Score: " + timeElapsed + " Seconds", 430, 425);
     }
 }

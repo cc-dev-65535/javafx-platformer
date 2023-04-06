@@ -122,6 +122,7 @@ public class GameRuntime extends Application {
     private boolean running = true;
     private boolean isAlive = true;
     private boolean endScreen = false;
+    private boolean gameReset = false;
     private UI currentUI;
 
     /* Initialize the game scene */
@@ -228,6 +229,7 @@ public class GameRuntime extends Application {
                 if (healthValue <= 1) {
                     isAlive = false;
                     endScreen = true;
+                    gameReset = true;
                 }
                 // Make new ui with health subtracted
                 healthValue--;
@@ -237,13 +239,15 @@ public class GameRuntime extends Application {
                 userInterfaceRoot.getChildren().add(currentUI);
                 running = false;
             } else {
-                // Make new character spawned
-                gameRoot.getChildren().remove(playerSprite);
-                playerSprite = new Sprite(PLAYER_SPRITE_SIZE, PLAYER_SPRITE_SIZE, new Image("com/example/platformer/girl/Idle (1).png"), 0, PLAYER_SPRITE_Y_OFFSET);
-                gameRoot.getChildren().add(playerSprite);
-                initScrollScreen(levelWidth, levelHeight, gameRoot);
-                gameRoot.setLayoutY(-(levelHeight - SCREEN_HEIGHT));
-                gameRoot.setLayoutX(0);
+//                // Make new character spawned
+//                gameRoot.getChildren().remove(playerSprite);
+//                playerSprite = new Sprite(PLAYER_SPRITE_SIZE, PLAYER_SPRITE_SIZE, new Image("com/example/platformer/girl/Idle (1).png"), 0, PLAYER_SPRITE_Y_OFFSET);
+//                gameRoot.getChildren().add(playerSprite);
+//                initScrollScreen(levelWidth, levelHeight, gameRoot);
+//                gameRoot.setLayoutY(-(levelHeight - SCREEN_HEIGHT));
+//                gameRoot.setLayoutX(0);
+//                running = true;
+                spawnNewCharacter();
                 running = true;
             }
         }
@@ -255,12 +259,13 @@ public class GameRuntime extends Application {
         while (coinIterator.hasNext()) {
             Sprite nextCoin = coinIterator.next();
             if (playerSprite.getBoundsInParent().intersects(nextCoin.getBoundsInParent())) {
-                nextCoin.setActive(false);
+                //nextCoin.setActive(false);
                 gameRoot.getChildren().remove(nextCoin);
                 coinIterator.remove();
 
                 coinsLeft--;
 
+                System.out.println(coinsLeft);
                 // Update the UI to reflect coins collected
                 userInterfaceRoot.getChildren().remove(currentUI);
                 Image health = new Image("com/example/platformer/ui/3d-heart.png");
@@ -271,9 +276,21 @@ public class GameRuntime extends Application {
                 if (coinsLeft <= 0) {
                     isAlive = false;
                     endScreen = true;
+                    gameReset = true;
                 }
             }
         }
+    }
+
+    /* spawn a new character in the game at initial position */
+    private void spawnNewCharacter() {
+        // Make new character spawned
+        gameRoot.getChildren().remove(playerSprite);
+        playerSprite = new Sprite(PLAYER_SPRITE_SIZE, PLAYER_SPRITE_SIZE, new Image("com/example/platformer/girl/Idle (1).png"), 0, PLAYER_SPRITE_Y_OFFSET);
+        gameRoot.getChildren().add(playerSprite);
+        initScrollScreen(levelWidth, levelHeight, gameRoot);
+        gameRoot.setLayoutY(-(levelHeight - SCREEN_HEIGHT));
+        gameRoot.setLayoutX(0);
     }
 
     /* Move the player across X axis */
@@ -329,6 +346,48 @@ public class GameRuntime extends Application {
         }
     }
 
+    /* Reset all the coin positions in the game to initial positions */
+    private void resetCoins() {
+        Iterator<Sprite> coinIterator = coins.iterator();
+        while (coinIterator.hasNext()) {
+            Sprite nextCoin = coinIterator.next();
+            gameRoot.getChildren().remove(nextCoin);
+            coinIterator.remove();
+        }
+        coinsLeft = 0;
+        for (int i = 0; i < Area.LEVEL.length; i++) {
+            for (int j = 0; j < Area.LEVEL[i].length(); j++) {
+                // Create a coin for each '1'
+                if (Area.LEVEL[i].charAt(j) == '1') {
+                    Sprite coinSprite = new Sprite(AREA_SPRITE_SIZE, AREA_SPRITE_SIZE, new Image("com/example/platformer/ui/coin.png"), j, i);
+                    coinSprite.setImage(new Image("com/example/platformer/ui/coin.png"), COIN_OFFSET, COIN_OFFSET, COIN_SIZE, COIN_SIZE);
+                    coins.add(coinSprite);
+                    gameRoot.getChildren().add(coinSprite);
+                    coinsLeft++;
+                }
+            }
+        }
+    }
+
+    /* Update and listen to keys on the game when on end game screen */
+    private void updateReset() {
+        if (keys.getOrDefault(KeyCode.R, false)) {
+            resetCoins();
+            spawnNewCharacter();
+
+            healthValue = PLAYER_INITIAL_HEALTH;
+            userInterfaceRoot.getChildren().remove(currentUI);
+            Image health = new Image("com/example/platformer/ui/3d-heart.png");
+            currentUI = new UI(health, healthValue, coinsLeft);
+            userInterfaceRoot.getChildren().add(currentUI);
+
+            running = true;
+            isAlive = true;
+            endScreen = false;
+            gameReset = false;
+        }
+    }
+
     /* Check for the end screen conditions. Add the screen to the UI root */
     private void showEndScreen() {
         Image endScreen;
@@ -363,6 +422,9 @@ public class GameRuntime extends Application {
                     endScreen = false;
                     keys.keySet().forEach(key -> keys.put(key, false));
                     showEndScreen();
+                }
+                if (gameReset) {
+                    updateReset();
                 }
             }
         }.start();

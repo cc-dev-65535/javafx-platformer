@@ -47,11 +47,11 @@ public class Sprite extends Canvas {
      * @param positionY the Y coordinate
      */
     public Sprite(final double width, final double height, final Image image, final int positionX, final int positionY) {
-        super(SPRITE_WIDTH, SPRITE_HEIGHT);
+        super(width, height);
         GraphicsContext gc = this.getGraphicsContext2D();
         this.setTranslateX(positionX * SPRITE_WIDTH);
         this.setTranslateY(positionY * SPRITE_HEIGHT);
-        gc.drawImage(image, SPRITE_OFFSET_X, SPRITE_OFFSET_Y, SPRITE_WIDTH, SPRITE_HEIGHT);
+        gc.drawImage(image, SPRITE_OFFSET_X, SPRITE_OFFSET_Y, width, height);
         playerVelocity = new Point2D(0, 0);
         active = true;
     }

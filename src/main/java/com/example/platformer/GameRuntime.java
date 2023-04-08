@@ -56,7 +56,7 @@ public class GameRuntime extends Application {
     /**
      * The y-offset of the player sprite.
      */
-    public static final int PLAYER_SPRITE_Y_OFFSET = 10;
+    public static final int PLAYER_SPRITE_Y_OFFSET = 15;
 
     /**
      * The size of each coin sprite.
@@ -110,6 +110,7 @@ public class GameRuntime extends Application {
 
     private Sprite playerSprite;
     private final ArrayList<Sprite> platforms = new ArrayList<>();
+    private final ArrayList<Sprite> spikes = new ArrayList<>();
     private final ArrayList<Sprite> coins = new ArrayList<>();
 
     /* HashMap that holds currently pressed keys */
@@ -165,6 +166,12 @@ public class GameRuntime extends Application {
                     platforms.add(platformSprite);
                     gameRoot.getChildren().add(platformSprite);
                 }
+                // create a spike for each ?
+                if (Area.LEVEL[i].charAt(j) == '?') {
+                    Sprite spikeSprite = new Sprite(AREA_SPRITE_SIZE, AREA_SPRITE_SIZE, new Image("com/example/platformer/ui/spike-ball.png"), j, i);
+                    spikes.add(spikeSprite);
+                    gameRoot.getChildren().add(spikeSprite);
+                }
                 // Create a coin for each '1'
                 if (Area.LEVEL[i].charAt(j) == '1') {
                     Sprite coinSprite = new Sprite(AREA_SPRITE_SIZE, AREA_SPRITE_SIZE, new Image("com/example/platformer/ui/coin.png"), j, i);
@@ -218,11 +225,11 @@ public class GameRuntime extends Application {
         if (keys.getOrDefault(KeyCode.W, false) && playerSprite.getTranslateY() >= PLAYER_Y_BOUND_OFFSET) {
             jumpPlayer();
         }
-        if (keys.getOrDefault(KeyCode.A, false) && playerSprite.getTranslateY() >= PLAYER_Y_BOUND_OFFSET) {
+        if (keys.getOrDefault(KeyCode.A, false) && playerSprite.getTranslateX() >= PLAYER_Y_BOUND_OFFSET) {
             playerSprite.setImage(new Image("com/example/platformer/girl/Idle (1) - left.png"), 0, 0, PLAYER_SPRITE_SIZE, PLAYER_SPRITE_SIZE);
             movePlayerX(-MOVE_PLAYER_X_OFFSET);
         }
-        if (keys.getOrDefault(KeyCode.D, false) && playerSprite.getTranslateY() >= PLAYER_Y_BOUND_OFFSET) {
+        if (keys.getOrDefault(KeyCode.D, false) && ((playerSprite.getTranslateX() + AREA_SPRITE_SIZE) <= (levelWidth - PLAYER_Y_BOUND_OFFSET))) {
             playerSprite.setImage(new Image("com/example/platformer/girl/Idle (1).png"), 0, 0, PLAYER_SPRITE_SIZE, PLAYER_SPRITE_SIZE);
             movePlayerX(MOVE_PLAYER_X_OFFSET);
         }
@@ -230,16 +237,25 @@ public class GameRuntime extends Application {
             playerSprite.setPlayerVelocity(playerSprite.getPlayerVelocity().add(0, 1));
         }
 
-        /* Reset the player when they fall off the platform */
-        if (playerSprite.getTranslateY() > levelHeight) {
+        // check player and spike collisions
+        boolean spikeCollide = false;
+        for (Sprite spike : spikes) {
+            if (playerSprite.getBoundsInParent().intersects(spike.getBoundsInParent())) {
+                spikeCollide = true;
+                break;
+            }
+        }
+
+        /* Reset the player when they fall off the platform or hit a spike */
+        if ((playerSprite.getTranslateY() > levelHeight) || spikeCollide == true) {
             if (running) {
-                if (healthValue <= 1) {
+                healthValue--;
+                if (healthValue <= 0) {
                     isAlive = false;
                     endScreen = true;
                     gameReset = true;
                 }
                 // Make new ui with health subtracted
-                healthValue--;
                 userInterfaceRoot.getChildren().remove(currentUI);
                 Image health = new Image("com/example/platformer/ui/3d-heart.png");
                 currentUI = new UI(health, healthValue, coinsLeft);
@@ -391,7 +407,7 @@ public class GameRuntime extends Application {
     /* Check for the end screen conditions. Add the screen to the UI root */
     private void showEndScreen() {
         Image endScreen;
-        if (healthValue <= 1) {
+        if (healthValue <= 0) {
             endScreen = new Image("com/example/platformer/ui/game-over-text.png");
         } else {
             endScreen = new Image("com/example/platformer/ui/win-text.png");

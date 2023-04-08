@@ -247,7 +247,7 @@ public class GameRuntime extends Application {
         }
 
         /* Reset the player when they fall off the platform or hit a spike */
-        if ((playerSprite.getTranslateY() > levelHeight) || spikeCollide == true) {
+        if ((playerSprite.getTranslateY() > levelHeight) || spikeCollide) {
             if (running) {
                 healthValue--;
                 if (healthValue <= 0) {

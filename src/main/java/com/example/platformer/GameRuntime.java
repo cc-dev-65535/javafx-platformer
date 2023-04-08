@@ -129,6 +129,7 @@ public class GameRuntime extends Application {
     private Instant gameTimerStart;
 
     /* Initialize the game scene */
+    @SuppressWarnings("Duplicates")
     private void initScene() {
         // Start timer
         gameTimerStart = Instant.now();
@@ -344,6 +345,7 @@ public class GameRuntime extends Application {
     }
 
     /* Reset all the coin positions in the game to initial positions */
+    @SuppressWarnings("Duplicates")
     private void resetCoins() {
         Iterator<Sprite> coinIterator = coins.iterator();
         while (coinIterator.hasNext()) {

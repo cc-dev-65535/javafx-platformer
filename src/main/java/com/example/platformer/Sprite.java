@@ -33,11 +33,8 @@ public class Sprite extends Canvas {
      */
     public static final int SPRITE_OFFSET_Y = 0;
 
-
-    private Image image;
+    // The velocity of sprite object's that can move
     private Point2D playerVelocity;
-    private boolean active;
-
     /**
      * Constructs a sprite.
      * @param width the width to set
@@ -53,7 +50,6 @@ public class Sprite extends Canvas {
         this.setTranslateY(positionY * SPRITE_HEIGHT);
         gc.drawImage(image, SPRITE_OFFSET_X, SPRITE_OFFSET_Y, width, height);
         playerVelocity = new Point2D(0, 0);
-        active = true;
     }
 
     /**
@@ -87,13 +83,4 @@ public class Sprite extends Canvas {
         this.setTranslateY(this.getTranslateY());
         gc.drawImage(image, offsetX, offsetY, width, height);
     }
-
-    /**
-     * Set active variable.
-     * @param active the active boolean to change
-     */
-    public void setActive(final boolean active) {
-        this.active = active;
-    }
-
 }
